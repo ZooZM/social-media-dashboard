@@ -48,13 +48,22 @@ class ClientController extends Controller
             'business_category' => 'required|string|max:255',
             'brand_logo' => 'nullable|image|max:2048',
             'services' => 'required|json',
+            'service_images.*' => 'nullable|image|max:2048',
             'business_info' => 'required|json',
             'ai_config' => 'nullable|json',
+            'fb_page_id' => 'nullable|string|unique:mongodb.clients,fb_page_id',
+            'insta_account_id' => 'nullable|string|unique:mongodb.clients,insta_account_id',
         ]);
 
         $servicesData = json_decode($validated['services'], true);
+        if (is_array($servicesData)) {
+            foreach ($servicesData as &$service) {
+                unset($service['imagePreview']);
+            }
+        }
         $businessInfo = json_decode($validated['business_info'], true);
         $aiConfig = isset($validated['ai_config']) ? json_decode($validated['ai_config'], true) : [];
+        $serviceImages = $request->file('service_images', []);
         
         $this->clientService->createClient([
             'name' => $validated['name'],
@@ -62,7 +71,9 @@ class ClientController extends Controller
             'services' => $servicesData,
             'business_info' => $businessInfo,
             'ai_config' => $aiConfig,
-        ], $request->file('brand_logo'));
+            'fb_page_id' => $validated['fb_page_id'] ?? null,
+            'insta_account_id' => $validated['insta_account_id'] ?? null,
+        ], $request->file('brand_logo'), $serviceImages);
 
         return redirect()->route('clients.index')
             ->with('success', 'Client created successfully.');
@@ -94,13 +105,22 @@ class ClientController extends Controller
             'business_category' => 'required|string|max:255',
             'brand_logo' => 'nullable|image|max:2048',
             'services' => 'required|json',
+            'service_images.*' => 'nullable|image|max:2048',
             'business_info' => 'required|json',
             'ai_config' => 'nullable|json',
+            'fb_page_id' => 'nullable|string|unique:mongodb.clients,fb_page_id,' . $id . ',_id',
+            'insta_account_id' => 'nullable|string|unique:mongodb.clients,insta_account_id,' . $id . ',_id',
         ]);
 
         $servicesData = json_decode($validated['services'], true);
+        if (is_array($servicesData)) {
+            foreach ($servicesData as &$service) {
+                unset($service['imagePreview']);
+            }
+        }
         $businessInfo = json_decode($validated['business_info'], true);
         $aiConfig = isset($validated['ai_config']) ? json_decode($validated['ai_config'], true) : [];
+        $serviceImages = $request->file('service_images', []);
 
         $this->clientService->updateClient($id, [
             'name' => $validated['name'],
@@ -108,7 +128,9 @@ class ClientController extends Controller
             'services' => $servicesData,
             'business_info' => $businessInfo,
             'ai_config' => $aiConfig,
-        ], $request->file('brand_logo'));
+            'fb_page_id' => $validated['fb_page_id'] ?? null,
+            'insta_account_id' => $validated['insta_account_id'] ?? null,
+        ], $request->file('brand_logo'), $serviceImages);
 
         return redirect()->route('clients.index')
             ->with('success', 'Client updated successfully.');

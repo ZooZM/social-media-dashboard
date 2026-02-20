@@ -52,16 +52,29 @@ class InteractionLogService
                     ]
                 ]
             ]);
-        })->toArray();
+        });
 
-        $activePlatforms = count($platformStats);
+        // Convert cursor to array directly if it's iterable
+        if ($platformStats instanceof \Traversable) {
+            $platformStats = iterator_to_array($platformStats);
+        }
 
+        /* 
+         * Debugging: In some versions/configurations, raw() might return varying structures.
+         * The error "Undefined array key '_id'" suggests the structure isn't what we expect.
+         * We'll try to handle object/array differences.
+         */
+        
         return [
             'total_messages' => $totalMessages,
             'messages_today' => $messagesToday,
-            'active_platforms' => $activePlatforms,
+            'active_platforms' => count($platformStats),
             'platform_breakdown' => collect($platformStats)->mapWithKeys(function($item) {
-                return [$item['_id'] => $item['count']];
+                // Handle both array and object access
+                $item = (array) $item;
+                $key = $item['_id'] ?? 'unknown';
+                $count = $item['count'] ?? 0;
+                return [$key => $count];
             })->toArray(),
         ];
     }

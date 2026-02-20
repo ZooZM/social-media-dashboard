@@ -104,6 +104,18 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm">
                                 </div>
                             </div>
+                            
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Service Image (Optional)</label>
+                                <div class="flex items-center gap-4">
+                                    <template x-if="service.imagePreview || service.image">
+                                        <img :src="service.imagePreview || ('/storage/' + service.image)" alt="Service image preview" class="w-16 h-16 rounded-lg object-cover border border-gray-200">
+                                    </template>
+                                    <input type="file" :name="'service_images[' + index + ']'" accept="image/*" @change="previewServiceImage($event, index)"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 placeholder:text-gray-400">
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">Upload a new image to replace the existing one.</p>
+                            </div>
 
                             <div class="mt-3">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
@@ -159,7 +171,25 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">📷 Instagram</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">📘 Facebook Page ID</label>
+                            <input type="text" name="fb_page_id" x-model="fb_page_id" placeholder="Facebook Page ID"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm">
+                            <p class="mt-1 text-xs text-gray-500">Required for n8n integration</p>
+                            @error('fb_page_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">📸 Instagram Account ID</label>
+                            <input type="text" name="insta_account_id" x-model="insta_account_id" placeholder="Instagram Account ID"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm">
+                            <p class="mt-1 text-xs text-gray-500">Required for n8n integration</p>
+                            @error('insta_account_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">�📷 Instagram</label>
                             <input type="text" x-model="businessInfo.social_media.instagram" placeholder="@username or full URL"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm">
                         </div>
@@ -339,6 +369,31 @@
                                 <textarea x-model="businessInfo.location.full_address" rows="2" placeholder="Street name, building number, etc."
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm"></textarea>
                             </div>
+                        </div>
+
+                        <!-- Location Links -->
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-xs text-gray-600 font-medium">Location Map Links (Optional)</label>
+                                <button type="button" @click="addLocationLink" 
+                                    class="text-xs text-brand-600 hover:text-brand-700 font-medium">+ Add Link</button>
+                            </div>
+                            <template x-if="businessInfo.location.links && businessInfo.location.links.length > 0">
+                                <div class="space-y-2">
+                                    <template x-for="(link, lIndex) in businessInfo.location.links" :key="lIndex">
+                                        <div class="flex items-start gap-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                            <div class="flex-1 space-y-2">
+                                                <input type="text" x-model="link.description" placeholder="Description (e.g., Main Branch)" 
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm">
+                                                <input type="url" x-model="link.url" placeholder="Google Maps URL" 
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm">
+                                            </div>
+                                            <button type="button" @click="removeLocationLink(lIndex)" 
+                                                class="mt-2 text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
                         </div>
                     </div>
 
@@ -583,7 +638,7 @@
                     <select x-model="aiConfig.language" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm">
                         <option value="ar">Arabic</option>
                         <option value="en">English</option>
-                        <option value="both">Both</option>
+                        <option value="both">Arabic and English (ar and en)</option>
                     </select>
                 </div>
             </div>
@@ -616,33 +671,41 @@ function clientEditForm(client) {
         currentLogo: client.brand_logo || null,
         logoPreview: null,
         services: client.services || [],
-        businessInfo: client.business_info || {
+        fb_page_id: client.fb_page_id || '',
+        insta_account_id: client.insta_account_id || '',
+        businessInfo: {
             social_media: {
-                instagram: '',
-                twitter: '',
-                facebook: '',
-                linkedin: '',
-                tiktok: '',
-                snapchat: ''
+                instagram: client.business_info?.social_media?.instagram || '',
+                twitter: client.business_info?.social_media?.twitter || '',
+                facebook: client.business_info?.social_media?.facebook || '',
+                linkedin: client.business_info?.social_media?.linkedin || '',
+                tiktok: client.business_info?.social_media?.tiktok || '',
+                snapchat: client.business_info?.social_media?.snapchat || ''
             },
-            contact: { phone: '', email: '', whatsapp: '', website: '' },
+            contact: {
+                phone: client.business_info?.contact?.phone || '',
+                email: client.business_info?.contact?.email || '',
+                whatsapp: client.business_info?.contact?.whatsapp || '',
+                website: client.business_info?.contact?.website || ''
+            },
             location: {
-                city: '',
-                district: '',
-                full_address: ''
+                city: client.business_info?.location?.city || '',
+                district: client.business_info?.location?.district || '',
+                full_address: client.business_info?.location?.full_address || '',
+                links: client.business_info?.location?.links || []
             },
-            working_hours: client.business_info?.working_hours || []
+            working_hours: client.business_info?.working_hours || [],
             payment_methods: {
-                type: 'cash',
-                specific_methods: [],
-                installments: [],
-                other: ''
+                type: client.business_info?.payment_methods?.type || 'cash',
+                specific_methods: client.business_info?.payment_methods?.specific_methods || [],
+                installments: client.business_info?.payment_methods?.installments || [],
+                other: client.business_info?.payment_methods?.other || ''
             }
         },
         offers: client.offers || [],
-        aiConfig: client.ai_config || {
-            brand_voice: '',
-            language: 'ar'
+        aiConfig: {
+            brand_voice: client.ai_config?.brand_voice || '',
+            language: client.ai_config?.language || 'ar'
         },
 
         previewLogo(event) {
@@ -661,8 +724,22 @@ function clientEditForm(client) {
                 name: '',
                 description: '',
                 price: '',
-                variants: []
+                variants: [],
+                imagePreview: null
             });
+        },
+
+        previewServiceImage(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.services[index].imagePreview = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                this.services[index].imagePreview = null;
+            }
         },
 
         removeService(index) {
@@ -709,6 +786,17 @@ function clientEditForm(client) {
 
         removeTimeSlot(index) {
             this.businessInfo.working_hours.splice(index, 1);
+        },
+
+        addLocationLink() {
+            this.businessInfo.location.links.push({
+                url: '',
+                description: ''
+            });
+        },
+
+        removeLocationLink(index) {
+            this.businessInfo.location.links.splice(index, 1);
         }
     }
 }

@@ -52,7 +52,7 @@
                         {{ $client->created_at->format('M d, Y') }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="{{ route('clients.edit', $client->_id) }}" class="text-brand-600 hover:text-brand-900 mr-3">Edit</a>
+                        <a href="{{ route('clients.edit', $client->_id) }}" onclick='console.log(@json($client))' class="text-brand-600 hover:text-brand-900 mr-3">Edit</a>
                         <form action="{{ route('clients.destroy', $client->_id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this client?');">
                             @csrf
                             @method('DELETE')

@@ -1,0 +1,196 @@
+{
+    "info": {
+        "_postman_id": "c1a2b3d4-e5f6-7890-1234-56789abcdef0",
+        "name": "Social Media Dashboard - n8n APIs",
+        "description": "API Collection for Social Media Dashboard n8n Integration",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Get Clients",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/n8n/clients",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "n8n",
+                        "clients"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Get Single Client",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/n8n/client/:id",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "n8n",
+                        "client",
+                        ":id"
+                    ],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "CLIENT_ID_HERE",
+                            "description": "The ID of the client"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Lookup Client by Social ID",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/n8n/clients/lookup?fb_page_id=FACEBOOK_ID_HERE&insta_account_id=INSTAGRAM_ID_HERE",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "n8n",
+                        "clients",
+                        "lookup"
+                    ],
+                    "query": [
+                        {
+                            "key": "fb_page_id",
+                            "value": "FACEBOOK_ID_HERE",
+                            "description": "Lookup by Facebook Page ID (Optional if insta_account_id is provided)"
+                        },
+                        {
+                            "key": "insta_account_id",
+                            "value": "INSTAGRAM_ID_HERE",
+                            "description": "Lookup by Instagram Account ID (Optional if fb_page_id is provided)"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Get Logs",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/n8n/logs",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "n8n",
+                        "logs"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Get Stats",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/n8n/stats",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "n8n",
+                        "stats"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Log Interaction",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"client_id\": \"CLIENT_ID_HERE\",\n    \"message\": \"Test Message\",\n    \"response\": \"Test Response\",\n    \"platform\": \"whatsapp\",\n    \"metadata\": {}\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/n8n/log",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "n8n",
+                        "log"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{api_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000",
+            "type": "string"
+        },
+        {
+            "key": "api_token",
+            "value": "YOUR_API_TOKEN_HERE",
+            "type": "string"
+        }
+    ]
+}

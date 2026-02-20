@@ -33,6 +33,8 @@ class Client extends Model
         'business_info',   // New: contact, branches, hours, payment methods
         'ai_config',       // New: AI configuration
         'offers',          // New: promotional offers
+        'fb_page_id',      // New: Facebook Page ID
+        'insta_account_id', // New: Instagram Account ID
     ];
 
     /**

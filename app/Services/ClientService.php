@@ -95,13 +95,79 @@ class ClientService
     {
         $client = Client::findOrFail($id);
 
+        return $this->formatClientData($client);
+    }
+
+    /**
+     * Get all clients formatted for n8n.
+     *
+     * @return array
+     */
+    public function getAllClients(): array
+    {
+        return Client::all()->map(function ($client) {
+            return $this->formatClientData($client);
+        })->toArray();
+    }
+
+    /**
+     * Lookup client by social media ID.
+     *
+     * @param string|null $fbPageId
+     * @param string|null $instaAccountId
+     * @return array|null
+     */
+    public function lookupClient(?string $fbPageId, ?string $instaAccountId): ?array
+    {
+        $query = Client::query();
+
+        if ($fbPageId) {
+            $query->where('fb_page_id', $fbPageId);
+        } elseif ($instaAccountId) {
+            $query->where('insta_account_id', $instaAccountId);
+        } else {
+            return null;
+        }
+
+        $client = $query->first();
+
+        return $client ? $this->formatClientData($client) : null;
+    }
+
+    /**
+     * Format client data for API response.
+     *
+     * @param Client $client
+     * @return array
+     */
+    private function formatClientData(Client $client): array
+    {
+        $services = $client->services ?? [];
+        $formattedServices = array_map(function ($service) {
+            unset($service['imagePreview']);
+            if (isset($service['image']) && $service['image']) {
+                $service['image'] = asset('storage/' . $service['image']);
+            }
+            return $service;
+        }, $services);
+
+        $brandLogo = $client->brand_logo ? asset('storage/' . $client->brand_logo) : null;
+
+        $aiConfig = $client->ai_config;
+        if (is_array($aiConfig) && isset($aiConfig['language']) && $aiConfig['language'] === 'both') {
+            $aiConfig['language'] = 'ar and en';
+        }
+
         return [
             'id' => (string) $client->_id,
             'name' => $client->name,
             'business_category' => $client->business_category,
-            'services' => $client->services,
+            'brand_logo' => $brandLogo,
+            'services' => $formattedServices,
             'business_info' => $client->business_info,
-            'ai_config' => $client->ai_config,
+            'ai_config' => $aiConfig,
+            'fb_page_id' => $client->fb_page_id,
+            'insta_account_id' => $client->insta_account_id,
         ];
     }
 

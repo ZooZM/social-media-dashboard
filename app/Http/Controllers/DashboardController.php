@@ -22,7 +22,8 @@ class DashboardController extends Controller
     {
         $stats = $this->logService->getStatistics();
         $stats['total_clients'] = \App\Models\Client::count();
+        $clients = \App\Models\Client::orderBy('created_at', 'desc')->get();
 
-        return view('dashboard.index', compact('stats'));
+        return view('dashboard.index', compact('stats', 'clients'));
     }
 }
