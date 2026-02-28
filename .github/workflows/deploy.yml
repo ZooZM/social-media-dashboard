@@ -34,3 +34,5 @@ jobs:
             
             sudo docker-compose exec -T app php artisan config:cache
             sudo docker-compose exec -T app php artisan view:cache
+            sudo docker-compose exec -T app php artisan view:clear
+            sudo docker-compose exec -T app php artisan cache:clear
