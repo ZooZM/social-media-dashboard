@@ -1,0 +1,33 @@
+name: Deploy Social Media Dashboard
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Google Cloud via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/social-media-dashboard
+            git pull origin main
+            
+            sudo docker-compose exec -T app composer install --no-dev --optimize-autoloader
+            npm install
+            
+            npm run build
+            
+            sudo chown -R www-data:www-data public/build
+            sudo chmod -R 755 public/build
+            
+            sudo docker-compose exec -T app php artisan config:cache
+            sudo docker-compose exec -T app php artisan view:cache
