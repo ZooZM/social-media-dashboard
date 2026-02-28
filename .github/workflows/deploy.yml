@@ -20,25 +20,19 @@ jobs:
           port: 22
           fingerprint: ""
           proxy_fingerprint: ""
+          sync: true
+          debug: true
           script: |
             cd ~/social-media-dashboard
             git pull origin main
             
-            # تحديث مكتبات الـ PHP جوه الحاوية
+            # تحديث الكود والـ Assets
             sudo docker-compose exec -T app composer install --no-dev --optimize-autoloader
-            
-            # بناء الـ Assets (استخدام sudo هنا بيضمن تخطي مشاكل الـ Permissions في فولدر build)
             sudo npm install
             sudo npm run build
             
-            # إعادة ضبط الملكية للملفات الجديدة
+            # تظبيط الصلاحيات والـ Cache
             sudo chown -R www-data:www-data public/build
-            sudo chmod -R 755 public/build
-            
-            # تنظيف وتحديث الكاش لضمان ظهور التعديلات فوراً
             sudo docker-compose exec -T app php artisan config:cache
             sudo docker-compose exec -T app php artisan view:clear
             sudo docker-compose exec -T app php artisan cache:clear
-            
-            # خطوة اختيارية لضمان عمل الصور
-            sudo docker-compose exec -T app php artisan storage:link
