@@ -18,6 +18,8 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
+          fingerprint: ""
+          proxy_fingerprint: ""
           script: |
             cd ~/social-media-dashboard
             git pull origin main
