@@ -53,6 +53,7 @@ class ClientController extends Controller
             'ai_config' => 'nullable|json',
             'fb_page_id' => 'nullable|string|unique:mongodb.clients,fb_page_id',
             'insta_account_id' => 'nullable|string|unique:mongodb.clients,insta_account_id',
+            'access_token' => 'nullable|string',
         ]);
 
         $servicesData = json_decode($validated['services'], true);
@@ -73,6 +74,7 @@ class ClientController extends Controller
             'ai_config' => $aiConfig,
             'fb_page_id' => $validated['fb_page_id'] ?? null,
             'insta_account_id' => $validated['insta_account_id'] ?? null,
+            'access_token' => $validated['access_token'] ?? null,
         ], $request->file('brand_logo'), $serviceImages);
 
         return redirect()->route('clients.index')
@@ -110,6 +112,7 @@ class ClientController extends Controller
             'ai_config' => 'nullable|json',
             'fb_page_id' => 'nullable|string|unique:mongodb.clients,fb_page_id,' . $id . ',_id',
             'insta_account_id' => 'nullable|string|unique:mongodb.clients,insta_account_id,' . $id . ',_id',
+            'access_token' => 'nullable|string',
         ]);
 
         $servicesData = json_decode($validated['services'], true);
@@ -130,6 +133,7 @@ class ClientController extends Controller
             'ai_config' => $aiConfig,
             'fb_page_id' => $validated['fb_page_id'] ?? null,
             'insta_account_id' => $validated['insta_account_id'] ?? null,
+            'access_token' => $validated['access_token'] ?? null,
         ], $request->file('brand_logo'), $serviceImages);
 
         return redirect()->route('clients.index')

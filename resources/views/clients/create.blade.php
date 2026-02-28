@@ -216,6 +216,15 @@
                             <input type="text" x-model="businessInfo.social_media.snapchat" placeholder="Username or full URL"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm">
                         </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">🔑 Facebook Access Token</label>
+                            <input type="text" name="access_token" x-model="access_token" placeholder="EAAxxxxxx..."
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm font-mono">
+                            <p class="mt-1 text-xs text-gray-500">Meta/Facebook Page Access Token for API calls</p>
+                            @error('access_token')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
@@ -667,6 +676,7 @@ function clientForm() {
         services: [],
         fb_page_id: '{{ old('fb_page_id') }}',
         insta_account_id: '{{ old('insta_account_id') }}',
+        access_token: '{{ old('access_token') }}',
         businessInfo: {
             social_media: {
                 instagram: '',

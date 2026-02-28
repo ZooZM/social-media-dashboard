@@ -35,6 +35,7 @@ class Client extends Model
         'offers',          // New: promotional offers
         'fb_page_id',      // New: Facebook Page ID
         'insta_account_id', // New: Instagram Account ID
+        'access_token',    // New: Facebook/Meta Access Token
     ];
 
     /**
