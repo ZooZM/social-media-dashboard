@@ -44,10 +44,6 @@ class Client extends Model
      * @var array
      */
     protected $casts = [
-        'services' => 'array',
-        'business_info' => 'array',
-        'ai_config' => 'array',
-        'offers' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

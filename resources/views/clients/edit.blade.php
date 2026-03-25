@@ -657,6 +657,7 @@
         <input type="hidden" name="services" x-bind:value="JSON.stringify(services)">
         <input type="hidden" name="business_info" x-bind:value="JSON.stringify(businessInfo)">
         <input type="hidden" name="ai_config" x-bind:value="JSON.stringify(aiConfig)">
+        <input type="hidden" name="offers" x-bind:value="JSON.stringify(offers)">
 
         <!-- Action Buttons -->
         <div class="flex items-center justify-end space-x-3">

@@ -54,6 +54,7 @@ class ClientController extends Controller
             'fb_page_id' => 'nullable|string|unique:mongodb.clients,fb_page_id',
             'insta_account_id' => 'nullable|string|unique:mongodb.clients,insta_account_id',
             'access_token' => 'nullable|string',
+            'offers' => 'nullable|json',
         ]);
 
         $servicesData = json_decode($validated['services'], true);
@@ -64,6 +65,7 @@ class ClientController extends Controller
         }
         $businessInfo = json_decode($validated['business_info'], true);
         $aiConfig = isset($validated['ai_config']) ? json_decode($validated['ai_config'], true) : [];
+        $offers = isset($validated['offers']) ? json_decode($validated['offers'], true) : [];
         $serviceImages = $request->file('service_images', []);
         
         $this->clientService->createClient([
@@ -72,6 +74,7 @@ class ClientController extends Controller
             'services' => $servicesData,
             'business_info' => $businessInfo,
             'ai_config' => $aiConfig,
+            'offers' => $offers,
             'fb_page_id' => $validated['fb_page_id'] ?? null,
             'insta_account_id' => $validated['insta_account_id'] ?? null,
             'access_token' => $validated['access_token'] ?? null,
@@ -113,6 +116,7 @@ class ClientController extends Controller
             'fb_page_id' => 'nullable|string|unique:mongodb.clients,fb_page_id,' . $id . ',_id',
             'insta_account_id' => 'nullable|string|unique:mongodb.clients,insta_account_id,' . $id . ',_id',
             'access_token' => 'nullable|string',
+            'offers' => 'nullable|json',
         ]);
 
         $servicesData = json_decode($validated['services'], true);
@@ -123,6 +127,7 @@ class ClientController extends Controller
         }
         $businessInfo = json_decode($validated['business_info'], true);
         $aiConfig = isset($validated['ai_config']) ? json_decode($validated['ai_config'], true) : [];
+        $offers = isset($validated['offers']) ? json_decode($validated['offers'], true) : [];
         $serviceImages = $request->file('service_images', []);
 
         $this->clientService->updateClient($id, [
@@ -131,6 +136,7 @@ class ClientController extends Controller
             'services' => $servicesData,
             'business_info' => $businessInfo,
             'ai_config' => $aiConfig,
+            'offers' => $offers,
             'fb_page_id' => $validated['fb_page_id'] ?? null,
             'insta_account_id' => $validated['insta_account_id'] ?? null,
             'access_token' => $validated['access_token'] ?? null,

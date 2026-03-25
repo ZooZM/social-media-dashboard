@@ -166,6 +166,7 @@ class ClientService
             'services' => $formattedServices,
             'business_info' => $client->business_info,
             'ai_config' => $aiConfig,
+            'offers' => $client->offers ?? [],
             'fb_page_id' => $client->fb_page_id,
             'insta_account_id' => $client->insta_account_id,
         ];
