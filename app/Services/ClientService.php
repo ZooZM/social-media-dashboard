@@ -169,6 +169,7 @@ class ClientService
             'offers' => $client->offers ?? [],
             'fb_page_id' => $client->fb_page_id,
             'insta_account_id' => $client->insta_account_id,
+            'access_token' => $client->access_token,
         ];
     }
 
