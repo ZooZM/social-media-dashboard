@@ -653,11 +653,173 @@
             </div>
         </div>
 
+        <!-- Private Messages & Public Comments Card -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">💬 Messages &amp; Comments Templates</h2>
+                <p class="text-sm text-gray-600 mt-0.5">Add template messages the AI can use when replying to customers</p>
+            </div>
+            <div class="p-6 space-y-8">
+
+                <!-- Private Messages (full width top) -->
+                <div>
+                    <div class="flex items-center mb-3">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-700 mr-3">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        </span>
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-900">Private Messages</h3>
+                            <p class="text-xs text-gray-500">Template replies sent as direct/private messages</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" x-model="newPrivateMsg" @keydown.enter.prevent="addPrivateMsg()"
+                            placeholder="Type a message and press Enter or click Add..."
+                            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 text-sm">
+                        <button type="button" @click="addPrivateMsg()"
+                            class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium whitespace-nowrap transition">+ Add</button>
+                    </div>
+                    <div class="space-y-2">
+                        <template x-if="privateMessages.length === 0">
+                            <div class="py-5 text-center bg-blue-50 border border-dashed border-blue-200 rounded-lg">
+                                <p class="text-xs text-blue-400">No private messages yet</p>
+                            </div>
+                        </template>
+                        <template x-for="(msg, idx) in privateMessages" :key="idx">
+                            <div class="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+                                <span class="flex-1 text-sm text-gray-800 break-words" x-text="msg"></span>
+                                <button type="button" @click="removePrivateMsg(idx)" class="text-red-400 hover:text-red-600 flex-shrink-0 mt-0.5 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-400" x-text="privateMessages.length + ' message(s) added'"></p>
+                </div>
+
+                <!-- Public Comments: 3 sub-lists -->
+                <div class="border-t border-gray-100 pt-6">
+                    <div class="flex items-center mb-5">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 mr-3">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
+                        </span>
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-900">Public Comments</h3>
+                            <p class="text-xs text-gray-500">Template replies for public post comments — split by scenario</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                        <!-- Inquiry: Can Send DM -->
+                        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="text-base">✅</span>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-indigo-900">Inquiry — Can Send DM</h4>
+                                    <p class="text-xs text-indigo-500">Comment reply when we CAN send a private message</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mb-2">
+                                <input type="text" x-model="newInquiryCanDm" @keydown.enter.prevent="addInquiryCanDm()"
+                                    placeholder="e.g. راسلناك على الخاص ..."
+                                    class="flex-1 px-2 py-1.5 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-400 text-xs bg-white">
+                                <button type="button" @click="addInquiryCanDm()"
+                                    class="px-2.5 py-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-xs font-medium whitespace-nowrap transition">+ Add</button>
+                            </div>
+                            <div class="space-y-1.5 max-h-48 overflow-y-auto">
+                                <template x-if="publicComments.inquiry_can_dm.length === 0">
+                                    <div class="py-4 text-center"><p class="text-xs text-indigo-300">No templates yet</p></div>
+                                </template>
+                                <template x-for="(item, idx) in publicComments.inquiry_can_dm" :key="idx">
+                                    <div class="flex items-start gap-1.5 bg-white border border-indigo-200 rounded-lg px-2.5 py-1.5">
+                                        <span class="flex-1 text-xs text-gray-700 break-words" x-text="item"></span>
+                                        <button type="button" @click="publicComments.inquiry_can_dm.splice(idx,1)" class="text-red-400 hover:text-red-600 flex-shrink-0 transition">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                            <p class="mt-2 text-xs text-indigo-400" x-text="publicComments.inquiry_can_dm.length + ' template(s)'"></p>
+                        </div>
+
+                        <!-- Inquiry: Cannot Send DM -->
+                        <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="text-base">❌</span>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-orange-900">Inquiry — Can't Send DM</h4>
+                                    <p class="text-xs text-orange-500">Comment reply when we CANNOT send a private message</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mb-2">
+                                <input type="text" x-model="newInquiryNoDm" @keydown.enter.prevent="addInquiryNoDm()"
+                                    placeholder="e.g. تواصل معنا على ..."
+                                    class="flex-1 px-2 py-1.5 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-400 text-xs bg-white">
+                                <button type="button" @click="addInquiryNoDm()"
+                                    class="px-2.5 py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-xs font-medium whitespace-nowrap transition">+ Add</button>
+                            </div>
+                            <div class="space-y-1.5 max-h-48 overflow-y-auto">
+                                <template x-if="publicComments.inquiry_no_dm.length === 0">
+                                    <div class="py-4 text-center"><p class="text-xs text-orange-300">No templates yet</p></div>
+                                </template>
+                                <template x-for="(item, idx) in publicComments.inquiry_no_dm" :key="idx">
+                                    <div class="flex items-start gap-1.5 bg-white border border-orange-200 rounded-lg px-2.5 py-1.5">
+                                        <span class="flex-1 text-xs text-gray-700 break-words" x-text="item"></span>
+                                        <button type="button" @click="publicComments.inquiry_no_dm.splice(idx,1)" class="text-red-400 hover:text-red-600 flex-shrink-0 transition">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                            <p class="mt-2 text-xs text-orange-400" x-text="publicComments.inquiry_no_dm.length + ' template(s)'"></p>
+                        </div>
+
+                        <!-- Engagement -->
+                        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="text-base">🤝</span>
+                                <div>
+                                    <h4 class="text-xs font-semibold text-green-900">Engagement</h4>
+                                    <p class="text-xs text-green-500">General engagement / reaction comments</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mb-2">
+                                <input type="text" x-model="newEngagement" @keydown.enter.prevent="addEngagement()"
+                                    placeholder="e.g. شكراً لمشاركتك! 😊"
+                                    class="flex-1 px-2 py-1.5 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-400 text-xs bg-white">
+                                <button type="button" @click="addEngagement()"
+                                    class="px-2.5 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 text-xs font-medium whitespace-nowrap transition">+ Add</button>
+                            </div>
+                            <div class="space-y-1.5 max-h-48 overflow-y-auto">
+                                <template x-if="publicComments.engagement.length === 0">
+                                    <div class="py-4 text-center"><p class="text-xs text-green-300">No templates yet</p></div>
+                                </template>
+                                <template x-for="(item, idx) in publicComments.engagement" :key="idx">
+                                    <div class="flex items-start gap-1.5 bg-white border border-green-200 rounded-lg px-2.5 py-1.5">
+                                        <span class="flex-1 text-xs text-gray-700 break-words" x-text="item"></span>
+                                        <button type="button" @click="publicComments.engagement.splice(idx,1)" class="text-red-400 hover:text-red-600 flex-shrink-0 transition">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                            <p class="mt-2 text-xs text-green-400" x-text="publicComments.engagement.length + ' template(s)'"></p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <!-- Hidden inputs for JSON data -->
         <input type="hidden" name="services" x-bind:value="JSON.stringify(services)">
         <input type="hidden" name="business_info" x-bind:value="JSON.stringify(businessInfo)">
         <input type="hidden" name="ai_config" x-bind:value="JSON.stringify(aiConfig)">
         <input type="hidden" name="offers" x-bind:value="JSON.stringify(offers)">
+        <input type="hidden" name="private_messages" x-bind:value="JSON.stringify(privateMessages)">
+        <input type="hidden" name="public_comments" x-bind:value="JSON.stringify(publicComments)">
 
         <!-- Action Buttons -->
         <div class="flex items-center justify-end space-x-3">
@@ -718,6 +880,16 @@ function clientEditForm(client) {
             brand_voice: client.ai_config?.brand_voice || '',
             language: client.ai_config?.language || 'ar'
         },
+        privateMessages: client.private_messages || [],
+        publicComments: {
+            inquiry_can_dm: client.public_comments?.inquiry_can_dm || [],
+            inquiry_no_dm:  client.public_comments?.inquiry_no_dm  || [],
+            engagement:     client.public_comments?.engagement     || []
+        },
+        newPrivateMsg: '',
+        newInquiryCanDm: '',
+        newInquiryNoDm: '',
+        newEngagement: '',
 
         previewLogo(event) {
             const file = event.target.files[0];
@@ -808,6 +980,33 @@ function clientEditForm(client) {
 
         removeLocationLink(index) {
             this.businessInfo.location.links.splice(index, 1);
+        },
+
+        addPrivateMsg() {
+            const msg = this.newPrivateMsg.trim();
+            if (msg) {
+                this.privateMessages.push(msg);
+                this.newPrivateMsg = '';
+            }
+        },
+
+        removePrivateMsg(index) {
+            this.privateMessages.splice(index, 1);
+        },
+
+        addInquiryCanDm() {
+            const v = this.newInquiryCanDm.trim();
+            if (v) { this.publicComments.inquiry_can_dm.push(v); this.newInquiryCanDm = ''; }
+        },
+
+        addInquiryNoDm() {
+            const v = this.newInquiryNoDm.trim();
+            if (v) { this.publicComments.inquiry_no_dm.push(v); this.newInquiryNoDm = ''; }
+        },
+
+        addEngagement() {
+            const v = this.newEngagement.trim();
+            if (v) { this.publicComments.engagement.push(v); this.newEngagement = ''; }
         }
     }
 }

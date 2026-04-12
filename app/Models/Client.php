@@ -28,14 +28,16 @@ class Client extends Model
     protected $fillable = [
         'name',
         'business_category',
-        'brand_logo',      // Changed from profile_image
-        'services',        // New: array of services
-        'business_info',   // New: contact, branches, hours, payment methods
-        'ai_config',       // New: AI configuration
-        'offers',          // New: promotional offers
-        'fb_page_id',      // New: Facebook Page ID
-        'insta_account_id', // New: Instagram Account ID
-        'access_token',    // New: Facebook/Meta Access Token
+        'brand_logo',           // Changed from profile_image
+        'services',             // New: array of services
+        'business_info',        // New: contact, branches, hours, payment methods
+        'ai_config',            // New: AI configuration
+        'offers',               // New: promotional offers
+        'fb_page_id',           // New: Facebook Page ID
+        'insta_account_id',     // New: Instagram Account ID
+        'access_token',         // New: Facebook/Meta Access Token
+        'private_messages',     // New: list of private message templates
+        'public_comments',      // New: list of public comment templates
     ];
 
     /**
