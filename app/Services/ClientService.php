@@ -170,6 +170,12 @@ class ClientService
             'fb_page_id' => $client->fb_page_id,
             'insta_account_id' => $client->insta_account_id,
             'access_token' => $client->access_token,
+            'private_messages' => $client->private_messages ?? [],
+            'public_comments' => $client->public_comments ?? [
+                'inquiry_can_dm' => [],
+                'inquiry_no_dm'  => [],
+                'engagement'     => [],
+            ],
         ];
     }
 
